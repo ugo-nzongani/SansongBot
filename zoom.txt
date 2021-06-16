@@ -1,0 +1,1 @@
+{"Hmr": {"elo": 32, "bo5": [false, [-1, -1, -1, -1, -1], 0, "not started"], "winrate": 0.6666666666666666, "nb_win": 2, "nb_games": 3, "nb_easy": 0, "nb_medium": 2, "nb_hard": 0, "nb_boss": 1, "nb_win_easy": 0, "nb_win_medium": 1, "nb_win_hard": 0, "nb_win_boss": 1}}
