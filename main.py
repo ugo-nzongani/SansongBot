@@ -7,7 +7,6 @@ from keep_alive import keep_alive
 from discord.ext import commands
 import math
 import navy
-import numpy as np
 import matplotlib.pyplot as plt
 from PIL import Image
 import glob
@@ -44,8 +43,9 @@ dico = navy.create_dict()
 
 # ZOOM
 zoom_infos = [False]
-lol = [x.replace("lol/","") for x in glob.glob("lol/*_*.*")]
+lol = [x.replace("champions/","") for x in glob.glob("champions/*_*.*")]
 essais_max = 4
+
 
 @client.event
 async def on_ready():
@@ -340,7 +340,7 @@ async def zoom(ctx, arg=None):
       zoom_infos.append(0)
       zoom_infos.append(difficulty)
       # image
-      image = Image.open('lol/'+picture)
+      image = Image.open('champions/'+picture)
       largeur = image.size[0]
       hauteur = image.size[1]
       left = random.randint(0, int(largeur-(largeur/cut)))
@@ -348,16 +348,16 @@ async def zoom(ctx, arg=None):
       top = random.randint(0, int(hauteur-(hauteur/cut)))
       bottom = top + int((hauteur/cut))
       image_zoomed = image.crop((left, top, right, bottom))
-      image_zoomed.convert('RGB').save('lol/zoom.jpg')
-      await ctx.channel.send(file=discord.File('lol/zoom.jpg'))
-      os.remove('lol/zoom.jpg')
+      image_zoomed.convert('RGB').save('champions/zoom.jpg')
+      await ctx.channel.send(file=discord.File('champions/zoom.jpg'))
+      os.remove('champions/zoom.jpg')
     else:
       await ctx.channel.send(username+' une partie est déjà en cours !')
 
 async def times_up(contexte, picture, champion, nb_essai, difficulty):
   zoom_infos[0] = False
   if len(zoom_infos) > 1:
-    await zoom_infos[1].send(file=discord.File('lol/'+picture))
+    await zoom_infos[1].send(file=discord.File('champions/'+picture))
     zoom_infos.remove(contexte)
     zoom_infos.remove(picture)
     zoom_infos.remove(champion)
