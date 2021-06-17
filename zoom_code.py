@@ -164,27 +164,27 @@ def is_on_promo(name, point, gain, data):
     data[name]['elo'] = -1
     data[name]['bo5'][3] = 'not started'
     on_promo = True
-  elif point + gain >= 800 and point < 1200:
+  elif point + gain >= 800 and point > 400 and point < 800:
     data[name]['bo5'][0] = True
     data[name]['elo'] = -2
     data[name]['bo5'][3] = 'not started'
     on_promo = True
-  elif point + gain >= 1200 and point < 1600:
+  elif point + gain >= 1200 and point > 800 and point < 1200:
     data[name]['bo5'][0] = True
     data[name]['elo'] = -3
     data[name]['bo5'][3] = 'not started'
     on_promo = True
-  elif point + gain >= 1600 and point < 2000:
+  elif point + gain >= 1600 and point > 1200 and point < 1600:
     data[name]['bo5'][0] = True
     data[name]['elo'] = -4
     data[name]['bo5'][3] = 'not started'
     on_promo = True
-  elif point + gain >= 2000 and point < 2400:
+  elif point + gain >= 2000 and point > 2000 and point < 2400:
     data[name]['bo5'][0] = True
     data[name]['elo'] = -5
     data[name]['bo5'][3] = 'not started'
     on_promo = True
-  elif point + gain >= 2400 and point < 2800:
+  elif point + gain >= 2400 and point > 2400 and point < 2800:
     data[name]['bo5'][0] = True
     data[name]['elo'] = -6
     data[name]['bo5'][3] = 'not started'
@@ -269,6 +269,8 @@ def lp_loss(name, loss, nb, data):
         data[name]['elo'] = 1990
       elif data[name]['elo'] == 2400:
         data[name]['elo'] = 2390
+  else:
+    data[name]['elo'] = 0
   data[name][nb] += 1
 
 def get_value_promo(name):
@@ -282,3 +284,6 @@ def get_value_promo(name):
     elif x == 0:
       loose += 1
   return (win,loose)
+
+def takeSecond(elem):
+    return elem[1]
