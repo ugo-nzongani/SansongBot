@@ -2,6 +2,123 @@ import numpy as np
 import matplotlib.colors as mlc
 import matplotlib.pyplot as plt
 import random
+from discord.ext import commands
+import discord
+
+in_game = [] # contient la liste des joueurs en jeu
+all_grid = {} # dictionnaire associant à chaque joueur un quadruplet contenant:
+           # - sa grille
+           # - la grille de son adversaire
+           # - la vue de sa grille
+           # - la vue de la grille de son adversaire
+           # - la position de ses bateaux
+           # - la position des bateaux de son adversaire
+
+messages_touche = ['Touché !', 'TOUCHÉ !!!!', 'Pixel !']
+messages_rate = ['Raté !', 'Encore raté !', 'Fais un effort !', 'Bruh', "Comment c'est possible d'être aussi nul"]
+messages_coule = ['Coulé !']
+
+def create_dict():
+    d = {}
+    letters_maj = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
+    letters_min = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j']
+    for i in range(10):
+        for j in range(10):
+            d[letters_maj[i]+str(j+1)] = str(i)+str(j)
+            d[letters_min[i]+str(j+1)] = str(i)+str(j)
+    return d
+    
+dico = create_dict()
+
+class navy(commands.Cog):
+    def __init__(self, client):
+        self.client = client
+
+    # bataille navale
+    @commands.command()
+    async def b(self,ctx, arg=None):
+      # récupération du nom de l'auteur de la commande
+      username = ctx.message.author.name
+      # si l'auteur de la commande est deja dans une partie
+      if(username in in_game):
+        if(arg == None):
+          await ctx.send(username+' tu dois écrire **!b stop** ou **!b <case>**\nExemple: !b A1')
+        elif(str(arg) == 'stop'):
+          # on supprime toutes les données relatives à la partie
+          in_game.remove(username)
+          del all_grid[username]
+          await ctx.send(username+' déclare forfait.')
+        # si la commande de type 'lettre numero' est dans le dictionnaire (aka la case est valide, exemple: !bn A0)
+        elif(str(arg) in dico):
+          # jouer
+          hit, coule = player_attack(all_grid[username][2], all_grid[username][3], dico, str(arg), all_grid[username][5])
+          if(hit != 0): # si le joueur attaque une case qu'il n'a pas encore attaqué
+            # affichage du résultat de l'attaque
+            if(hit == 2):
+              await ctx.send(random.choice(messages_rate))
+            elif(hit == 1):
+              if(coule):
+                await ctx.send(random.choice(messages_coule))
+              else:
+                await ctx.send(random.choice(messages_touche))
+            # FAIRE ATTAQUER LE BOT
+
+            # test si un des joueurs a gagné
+            # test si l'auteur de la commande a gagné
+            if(player_lost(all_grid[username][2], all_grid[username][3])):
+              # on supprime toutes les données relatives à la partie
+              in_game.remove(username)
+              del all_grid[username]
+              await ctx.send(username+' a gagné !')
+            # test si le bot a gagné
+            elif(player_lost(all_grid[username][0], all_grid[username][1])):
+              # on supprime toutes les données relatives à la partie
+              in_game.remove(username)
+              del all_grid[username]
+              await ctx.send('J\'ai gagné !')
+            # AFFICHAGE DE LA GRILLE DU JOUEUR MISE A JOUR AVEC LATTAQUE DU BOT
+            print_grid(all_grid[username][0], 'player_grid', 'Grille de '+username)
+            print_grid(all_grid[username][3], 'ennemy_grid_view', 'Grille de Sansong')
+            await ctx.send(file=discord.File('navy_grid/player_grid.png'))
+            await ctx.send(file=discord.File('navy_grid/ennemy_grid_view.png'))
+            await ctx.send('**Tape !b <case> pour attaquer !**\n_Exemple: !b B5_')
+          # si le joueur a attaqué une case qu'il avait deja attaqué
+          else:
+            await ctx.send(username+' tu as déjà attaqué la case '+str(arg)+', choisis une autre case !')
+        # si l'auteur de la commande rentre une commande invalide
+        else:
+          await ctx.send(username+' tu dois écrire **!b stop** ou **!b <case>**\n_Exemple: !b A1_')
+      # si l'auteur de la commande n'est pas dans une partie
+      else:
+        # aucun paramètre n'a été passé
+        if(arg == None):
+          await ctx.send(username+' tu dois écrire **!b start** pour commencer une partie !')
+        # le joueur a écrit start
+        elif(str(arg) == 'start'):
+          # la partie commence
+          # on ajoute son username à in_game
+          in_game.append(username)
+          player_grid, player_grid_view, ennemy_grid, ennemy_grid_view, player_boat, ennemy_boat = create_grid()
+          print(player_boat)
+          # mode bateau trouvé
+          boat_found = False
+          # mode direction trouvé
+          direction_found = False
+          # ajout du joueur au dictionnaire de jeu
+          all_grid[username] = (player_grid, player_grid_view, ennemy_grid, ennemy_grid_view, player_boat, ennemy_boat, boat_found, direction_found)
+          # enregistrements des images des grilles dans le dossier navy_grid
+          print_grid(all_grid[username][0], 'player_grid', 'Grille de '+username)
+          print_grid(all_grid[username][3], 'ennemy_grid_view', 'Grille de Sansong')
+          print_grid(all_grid[username][2], 'ennemy_grid', 'Vrai grille de Sansong')
+          await ctx.send(file=discord.File('navy_grid/player_grid.png'))
+          await ctx.send(file=discord.File('navy_grid/ennemy_grid_view.png'))
+          await ctx.send('**Tape !b <case> pour attaquer !**\n_Exemple: !b B5_')
+        # le joueur a écrit un paramètre non valide
+        else:
+          await ctx.send(username+' tu dois écrire **!b start** pour commencer une partie !')
+          
+def setup(client):
+    client.add_cog(navy(client))
 
 def print_grid(data, name, titre):
   letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
@@ -35,16 +152,6 @@ def print_grid(data, name, titre):
   figure.set_figheight(6)
   figure.set_figwidth(6)
   figure.savefig(fname='navy_grid/'+name,transparent=True)  
-
-def create_dict():
-    d = {}
-    letters_maj = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']
-    letters_min = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j']
-    for i in range(10):
-        for j in range(10):
-            d[letters_maj[i]+str(j+1)] = str(i)+str(j)
-            d[letters_min[i]+str(j+1)] = str(i)+str(j)
-    return d
 
 # get_case(data, 'A1')
 def get_case(data, d, i):
