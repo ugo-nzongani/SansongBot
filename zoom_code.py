@@ -54,7 +54,16 @@ class zoom_code(commands.Cog):
     @commands.command()
     async def zoom(self,ctx, arg=None):
       if str(arg).lower() == 'help':
-        await ctx.channel.send('Une image zoomée d\'un personnage de League Of Legends est envoyée, les joueurs ont 4 tentatives pour trouver duquel il s\'agit.\nOn peut choisir un niveau de difficulté en ajoutant les mots suivants après !zoom:\n- _easy_\n- _hard_\n- _boss_\nLe niveau de base est medium.\nLes apostrophes et les accents dans les noms ne sont pas comptés mais les espaces sont conservé, **kog\'maw** et **maître yi** doivent être respectivement écrit **kogmaw** et ** maitre yi** pour être validé.\nAttention: **jarvan** s\'écrit **jarvan IV**\nLe gain et la perte de LP fonctionnent de la manière suivante:\n- _easy_ : Gain = '+str(gain_easy)+', Perte = '+str(loss_easy)+'\n- _medium_ : Gain = '+str(gain_medium)+', Perte = '+str(loss_medium)+'\n- _hard_ : Gain = '+str(gain_hard)+', Perte = '+str(loss_hard)+'\n- _boss_ : Gain = '+str(gain_boss)+', Perte = '+str(loss_boss)+'\nLa perte de LP est effective à **chaque** mauvaise réponse.\nIl y a '+str(len(lol))+' images différentes.\n!rank affiche le classement de tous les joueurs.')
+        embed = discord.Embed(
+          title = 'Zoom',
+          # description = elo,
+          colour = discord.Colour.purple()
+          )
+        rules = 'Une image zoomée d\'un personnage de League Of Legends est envoyée, les joueurs ont 4 tentatives pour trouver duquel il s\'agit.\nOn peut choisir un niveau de difficulté en ajoutant les arguments suivants après `!zoom`:\n- _easy_\n- _hard_\n- _boss_\nLe niveau de base est _medium_.\n\nLes apostrophes et les accents dans les noms ne sont pas comptés mais les espaces sont conservés. Par exemple **kog\'maw** et **maître yi** doivent être respectivement écrit **kogmaw** et ** maitre yi**.\nAttention: **jarvan** s\'écrit **jarvan IV**\n\nLe gain et la perte de LP fonctionnent de la manière suivante:\n- _easy_ : Gain = '+str(gain_easy)+', Perte = '+str(loss_easy)+'\n- _medium_ : Gain = '+str(gain_medium)+', Perte = '+str(loss_medium)+'\n- _hard_ : Gain = '+str(gain_hard)+', Perte = '+str(loss_hard)+'\n- _boss_ : Gain = '+str(gain_boss)+', Perte = '+str(loss_boss)+'\nLa perte de LP est effective à **chaque** mauvaise réponse.\nIl y a '+str(len(lol))+' images différentes.'
+        file = discord.File('bot_image/kindred.png', filename='image.png')
+        embed.set_image(url="attachment://image.png")
+        embed.add_field(name='Règles', value=rules,inline=False)
+        await ctx.send(file=file, embed=embed)
       else:
         # récupération du nom de l'auteur de la commande
         username = ctx.message.author.name

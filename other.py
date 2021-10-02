@@ -57,6 +57,10 @@ class other(commands.Cog):
         await ctx.send(ctx.message.author.name)
 
     @commands.command()
+    async def you(self,ctx):
+        await ctx.send('https://github.com/ugo-nzongani/SansongBot')
+
+    @commands.command()
     async def quote(self,ctx):
         quote = get_quote()
         await ctx.channel.send(quote)
