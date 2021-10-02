@@ -2,6 +2,7 @@ from discord.ext import commands
 import random
 import requests
 import json
+import discord
 
 writing_course = {'on' : False}
 selecting_course = {}
@@ -131,7 +132,21 @@ class other(commands.Cog):
           await ctx.send('Choisis un cours (son numéro) à supprimer parmis les suivants:\n\n'+list_courses)
           deleting_course[username] = [ctx.message.channel,cpt_list,names_list]
         elif str(args[0]).lower() == 'help':
-          await ctx.send('**!cours** donne une liste de cours disponibles\n\nPour ajouter un cours: **!cours add**\nLe prochain message correspond au cours ajouté\n\nPour supprimer un cours: **!cours delete**\nLe prochain message indique le numéro du cours à supprimer')
+          embed = discord.Embed(
+          title = 'Cours',
+          # description = elo,
+          colour = discord.Colour.red()
+          )
+
+          file = discord.File('bot_image/gibli.png', filename='image.png')
+          embed.set_image(url="attachment://image.png")
+          choose = '`!cours` - Envoi une liste de cours disponibles, une fois la commande tapée il faut choisir le numéro du cours souhaité parmis ceux envoyés'
+          add = '`!cours add nom du cours` - Ajoute un nouveau cours, une fois la commande tapée le prochain message correspond au cours ajouté. Pour passer à la ligne: **Shift + Enter**.\n\nExemple:\n`!cours add mon cours`\nCeci est mon cours ajouté.\n1 + 1 = 2\n2 + 2 = 4'
+          delete = '`!cours delete` - Supprime un cours existant, une fois la commande tapée le prochain message correspond au numéro du cours à supprimer.\n\nExemple:\n`!cours delete`\n1'
+          embed.add_field(name='Choisir un cours', value=choose,inline=False)
+          embed.add_field(name='Ajouter un cours', value=add,inline=False)
+          embed.add_field(name='Supprimer un cours', value=delete,inline=False)
+          await ctx.send(file=file, embed=embed)
         else:
           await ctx.send('L\'argument '+str(args[0])+'n\'est pas valide')
       else:

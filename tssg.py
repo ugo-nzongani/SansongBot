@@ -31,6 +31,10 @@ class tssg(commands.Cog):
       await ctx.send('https://youtu.be/rTsej-PCNBg')
 
     @commands.command()
+    async def manga(self,ctx):
+      await ctx.send('https://www.youtube.com/watch?v=o8UcqntSeWU')
+
+    @commands.command()
     async def minecraft(self,ctx):
       serveur = '_Pas de serveur pour le moment_'
       version = '1.15.1'

@@ -10,6 +10,9 @@ import tssg
 import other
 import science
 
+# Ping le bot tt les 5 minutes: https://uptimerobot.com/dashboard#mainDashboard 
+# Tuto: https://www.youtube.com/watch?v=SPTfmiYiuok
+
 # préfixe des commandes du bot
 prefix = '!'
 client = commands.Bot(command_prefix=prefix,help_command=None) # discord.Client()
@@ -62,8 +65,8 @@ async def help(ctx):
   draw = '`!draw` - Envoi un lien vers un tableau interactif\n'
   music = '`!join`\n`!play` - Prends l\'URL d\'une vidéo Youtube en argument\n`!pause`\n`!resume`\n`!leave`\n\n'
   calculs = '`!eq2 a b c` - Résout une équation de la forme ax² + bx + c = 0, on peut ajouter l\'argument plot pour afficher la courbe\nExemple: `!eq2 5 9 -1 plot`\n`!cano a b c` - Donne la forme canonique d\'un polynôme de la forme ax² + bx + c\n\n'
-  tssg = '`!reaver`\n`!kda`\n`!minecraft`\n`!rap`\n`!jap`\n`!drive - Liste des gages en attente`\n\n'
-  other = draw+'`!me` - You\n`!you` - Me\n!quote`\n`!cours` - Liste de cours disponibles\nPour plus d\'informations: `!cours help`'
+  tssg = '`!reaver`\n`!kda`\n`!minecraft`\n`!rap`\n`!jap`\n`!drive` - Liste des gages en attente\n`!manga`\n\n'
+  other = draw+'`!me` - You\n`!you` - Me\n`!quote`\n`!cours` - Liste de cours disponibles\nPour plus d\'informations: `!cours help`'
   zoom = '`!zoom` - Une image zoomée d\'un personnage de League Of Legends est envoyée, les joueurs ont 4 tentatives pour trouver duquel il s\'agit.\nPour plus d\'informations: `!zoom help`\n`!profile` - Affichage de son profile\n`!rank` - Ranking de tous les joueurs\n\n'
   navy = '`!b` - Bataille navale en cours de construction\n\n'
   embed = discord.Embed(
