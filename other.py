@@ -161,7 +161,14 @@ class other(commands.Cog):
           names_list.append(i)
           list_courses += str(cpt)+' - '+i+'\n'
           cpt += 1
-        await ctx.send('Choisis un cours (son numéro) parmis les suivants:\n\n'+list_courses)
+        embed = discord.Embed(
+          # title = 'Cours',
+          # description = elo,
+          colour = discord.Colour.orange()
+          )
+        #embed.set_footer(text='footer')
+        embed.add_field(name='Liste des cours', value=list_courses,inline=False)
+        await ctx.send(embed=embed)
         selecting_course[username] = [ctx.message.channel,cpt_list,names_list]
         
 # récupère une citation pour la commande !quote

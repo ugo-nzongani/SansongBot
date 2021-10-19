@@ -32,6 +32,9 @@ wakateam = ["wakateam", "Wakateam", "waka team"]
 wakateam_response = ["Vazy Wakateam tu vas y arriver !", "baka...", "WAKATEAM !!!!!!!!!!!!!!!!", "1 2 3 WAKATEAM !!!!!"]
 words_response = ["tempête !"]
 
+good_bot = ['good bot', 'GOOD BOT']
+good_bot_answer = ['boi']
+
 @client.event
 async def on_ready():
   print('We have logged in as {0.user}'.format(client))
@@ -58,6 +61,10 @@ async def on_message(message):
   # reconnaissance du mot wakateam
   if any(word in msg for word in wakateam):
       await message.channel.send(random.choice(wakateam_response))
+  # reconnaissance de good bot
+  if any(word in msg for word in good_bot):
+      await message.channel.send(file=discord.File('bot_image/pepe.gif'))
+      # await message.channel.send(random.choice(good_bot_answer))
   await client.process_commands(message)
 
 @client.command()
@@ -86,6 +93,6 @@ async def help(ctx):
   await ctx.message.author.send(file=file, embed=embed)
 
 # Pour rendre les LP perdus
-# zoom_code.give_lp_back([("Re\u00e4ver",-300)])
+# zoom_code.give_lp_back([("Re\u00e4ver",50)])
 keep_alive()
 client.run(os.getenv('TOKEN'))

@@ -31,8 +31,9 @@ class music(commands.Cog):
             await voice_channel.connect()
         else:
             await ctx.voice_client.move_to(voice_channel)
-            
-        ctx.voice_client.stop()
+        # pour stopper la musique
+        # ctx.voice_client.stop()
+
         FFMPEG_OPTIONS = {'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', 'options': '-vn'}
         YDL_OPTIONS = {'format':"bestaudio"}
         vc = ctx.voice_client
@@ -41,17 +42,21 @@ class music(commands.Cog):
             info = ydl.extract_info(url, download=False)
             url2 = info['formats'][0]['url']
             source = await discord.FFmpegOpusAudio.from_probe(url2, **FFMPEG_OPTIONS)
-            vc.play(source)
+            # test si le bot joue deja de la musique
+            if not ctx.voice_client.is_playing():
+              vc.play(source)              
     
     @commands.command()
     async def pause(self,ctx):
-        await ctx.voice_client.pause()
-        await ctx.channel.send("Paused ⏸")
+      await ctx.channel.send("Paused ⏸")
+      ctx.voice_client.pause()
+        
     
     @commands.command()
     async def resume(self,ctx):
-        await ctx.voice_client.resume()
-        await ctx.channel.send("resume ⏯")
+      await ctx.channel.send("Resume ⏯")
+      ctx.voice_client.resume()
+        
 
 def setup(client):
     client.add_cog(music(client))

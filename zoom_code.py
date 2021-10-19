@@ -41,7 +41,7 @@ class zoom_code(commands.Cog):
             await contexte.channel.send('Bonne réponse '+message.author.name+' !')
             update(message.author.name, True, difficulty)
           else:
-            if zoom_infos[4] == essais_max - 1 or message.content.lower() == 'stop':
+            if zoom_infos[4] == essais_max or message.content.lower() == 'stop':
               champion = zoom_infos[3]
               await times_up(zoom_infos[1], zoom_infos[2], zoom_infos[3], zoom_infos[4], zoom_infos[5], zoom_infos[6])
               await contexte.channel.send('C\'était **'+champion.replace(champion[0], champion[0].upper(), 1)+'** !')
